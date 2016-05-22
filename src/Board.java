@@ -18,6 +18,7 @@ import javax.swing.JPanel;
  */
 public class Board extends JPanel implements KeyListener
 {
+	
 	/** wysokoœæ pojedynczego klocka planszy*/
 	private final int HEIGHT = 50;
 	/** szerokoœæ klocka planszy */
@@ -161,339 +162,157 @@ public class Board extends JPanel implements KeyListener
 		switch(e.getKeyCode())
 		{
 		case KeyEvent.VK_UP:
-			move('u');
+			moveUp();
+			//move('u');
 			break;
 		case KeyEvent.VK_DOWN:
-			move('d');
+			moveDown();
 			break;
 		case KeyEvent.VK_LEFT:
-			move('l');
+			moveLeft();
 			break;
 		case KeyEvent.VK_RIGHT:
-			move('r');
+			moveRight();
 			break;
 		default:
 			break;
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------
-	
-	/** Metoda kieruj¹ca ruchem postaci */
-	public void move(char whereToGo)
+	/** Metoda pomocnicza zmieniaj¹ca pozycjê w zale¿noœci od kierunku ruchu
+	 * 
+	 * @param x1 kierunek ruchu w poziomie w zale¿noœci: x-1(lewo)/x+1(prawo)
+	 * @param y1 kierunek ruchu w pionie w zale¿noœci: y-1(gora)/y+1(dol)
+	 */
+	private void positionChange(int x1, int y1)
 	{
-		switch(whereToGo)
+		if(x1 == (x-1))
+			x--;
+		else if(x1 == (x+1))
+			x++;
+		else if(y1 == (y-1))
+			y--;
+		else if(y1 == (y+1))
+			y++;
+	}
+//===============================================================================
+	/** Metoda pomocnicza steruj¹ca ruchem postaci 
+	 * 
+	 * @param y0 aktualna pozycja w pionie
+	 * @param y1 pozycja docelowa odlegla o 1 pole w pionie w zale¿noœci: y-1(gora)/y+1(dol)
+	 * @param y2 pozycja docelowa odlegla o 2 pola w pionie w zale¿noœci: y-2(gora)/y+2(dol)
+	 * @param x0 aktualna pozycja w poziomie
+	 * @param x1 pozycja docelowa odlegla o 1 pole w poziomie w zale¿noœci: x-1(lewo)/x+1(prawo)
+	 * @param x2 pozycja docelowa odlegla o 2 pola w poziomie w zale¿noœci: x-2(lewo)/x+2(prawo)
+	 */
+	private void move(int x0, int x1, int x2, int y0, int y1, int y2)
+	{
+		
+		if(levelBoard[y1][x1] == WALL);
+		else if((levelBoard[y0][x0] == MAN) && (levelBoard[y1][x1] == FLOOR))
 		{
-		case 'u':
-			if(levelBoard[y-1][x] == WALL);
-			else if((levelBoard[y][x] == MAN) && (levelBoard[y-1][x] == FLOOR))
-			{
-				levelBoard[y-1][x] = MAN;
-				levelBoard[y][x] = FLOOR;
-				y--;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y-1][x] == DESTINATION))
-			{
-				levelBoard[y-1][x] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				y--;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y-1][x] == FLOOR))
-			{
-				levelBoard[y-1][x] = MAN;
-				levelBoard[y][x] = DESTINATION;
-				y--;
-			}
-			else if((levelBoard[y-1][x] == BOX) && (levelBoard[y-2][x] == FLOOR))
-			{
-				levelBoard[y-2][x] = BOX;
-				levelBoard[y-1][x] = MAN;
-				levelBoard[y][x] = FLOOR;
-				y--;
-			}
-			else if((levelBoard[y-1][x] == BOX) && (levelBoard[y-2][x] == DESTINATION))
-			{
-				levelBoard[y-2][x] = BOXONDEST;
-				levelBoard[y-1][x] = MAN;
-				levelBoard[y][x] = FLOOR;
-				y--;
-				numberOfFreeBoxes--;
-			}
-			else if((levelBoard[y-1][x] == BOXONDEST) && (levelBoard[y-2][x] == DESTINATION))
-			{
-				levelBoard[y-2][x] = BOXONDEST;
-				levelBoard[y-1][x] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				y--;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y-1][x] == BOXONDEST) && (levelBoard[y-2][x] == DESTINATION))
-			{
-				levelBoard[y-2][x] = BOXONDEST;
-				levelBoard[y-1][x] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				y--;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y-1][x] == BOXONDEST) && (levelBoard[y-2][x] == 	FLOOR))
-			{
-				levelBoard[y-2][x] = BOX;
-				levelBoard[y-1][x] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				y--;
-				numberOfFreeBoxes++;
-			}
-			else if(levelBoard[y-1][x] == DESTINATION)
-			{
-				levelBoard[y-1][x] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				y--;
-			}
-			else if((levelBoard[y-1][x] == BOXONDEST) && (levelBoard[y-2][x] == FLOOR))
-			{
-				levelBoard[y-2][x] = BOX;
-				levelBoard[y-1][x] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				y--;
-				numberOfFreeBoxes++;
-			}
-			break;
-
-			//DOWN=====================================================================
-		case 'd':
-			if(levelBoard[y+1][x] == WALL);
-			else if((levelBoard[y][x] == MAN) && (levelBoard[y+1][x] == FLOOR))
-			{
-				levelBoard[y+1][x] = MAN;
-				levelBoard[y][x] = FLOOR;
-				y++;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y+1][x] == DESTINATION))
-			{
-				levelBoard[y+1][x] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				y++;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y+1][x] == FLOOR))
-			{
-				levelBoard[y+1][x] = MAN;
-				levelBoard[y][x] = DESTINATION;
-				y++;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y+1][x] == BOX) && (levelBoard[y+2][x] == FLOOR))
-			{
-				levelBoard[y+2][x] = BOX;
-				levelBoard[y+1][x] = MAN;
-				levelBoard[y][x] = DESTINATION;
-				y++;
-			}
-			else if((levelBoard[y+1][x] == BOX) && (levelBoard[y+2][x] == FLOOR))
-			{
-				levelBoard[y+2][x] = BOX;
-				levelBoard[y+1][x] = MAN;
-				levelBoard[y][x] = FLOOR;
-				y++;
-			}
-			else if((levelBoard[y+1][x] == BOX) && (levelBoard[y+2][x] == DESTINATION))
-			{
-				levelBoard[y+2][x] = BOXONDEST;
-				levelBoard[y+1][x] = MAN;
-				levelBoard[y][x] = FLOOR;
-				y++;
-				numberOfFreeBoxes--;
-			}
-			else if((levelBoard[y+1][x] == BOXONDEST) && (levelBoard[y+2][x] == DESTINATION))
-			{
-				levelBoard[y+2][x] = BOXONDEST;
-				levelBoard[y+1][x] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				y++;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y+1][x] == BOXONDEST) && (levelBoard[y+2][x] == DESTINATION))
-			{
-				levelBoard[y-2][x] = BOXONDEST;
-				levelBoard[y-1][x] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				y++;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y+1][x] == BOXONDEST) && (levelBoard[y+2][x] == 	FLOOR))
-			{
-				levelBoard[y+2][x] = BOX;
-				levelBoard[y+1][x] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				y++;
-				numberOfFreeBoxes++;
-			}
-			else if(levelBoard[y+1][x] == DESTINATION)
-			{
-				levelBoard[y+1][x] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				y++;
-			}
-			else if((levelBoard[y+1][x] == BOXONDEST) && (levelBoard[y+2][x] == FLOOR))
-			{
-				levelBoard[y+2][x] = BOX;
-				levelBoard[y+1][x] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				y++;
-				numberOfFreeBoxes++;
-			}
-			break;
-
-			//LEFT=====================================================================
-		case 'l':
-			if(levelBoard[y][x-1] == WALL);
-			else if((levelBoard[y][x] == MAN) && (levelBoard[y][x-1] == FLOOR))
-			{
-				levelBoard[y][x-1] = MAN;
-				levelBoard[y][x] = FLOOR;
-				x--;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y][x-1] == BOX) && (levelBoard[y][x-2] == FLOOR))
-			{
-				levelBoard[y][x-2] = BOX;
-				levelBoard[y][x-1] = MAN;
-				levelBoard[y][x] = DESTINATION;
-				x--;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y][x-1] == FLOOR))
-			{
-				levelBoard[y][x-1] = MAN;
-				levelBoard[y][x] = DESTINATION;
-				x--;
-			}
-			else if((levelBoard[y][x-1] == BOX) && (levelBoard[y][x-2] == FLOOR))
-			{
-				levelBoard[y][x-2] = BOX;
-				levelBoard[y][x-1] = MAN;
-				levelBoard[y][x] = FLOOR;
-				x--;
-			}
-			else if((levelBoard[y][x-1] == BOX) && (levelBoard[y][x-2] == DESTINATION))
-			{
-				levelBoard[y][x-2] = BOXONDEST;
-				levelBoard[y][x-1] = MAN;
-				levelBoard[y][x] = FLOOR;
-				x--;
-				numberOfFreeBoxes--;
-			}
-
-			else if((levelBoard[y][x] == BOXONDEST) && (levelBoard[y][x-2] == DESTINATION))
-			{
-				levelBoard[y][x-2] = BOXONDEST;
-				levelBoard[y][x-1] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				x--;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y][x-1] == BOXONDEST) && (levelBoard[y][x-2] == DESTINATION))
-			{
-				levelBoard[y][x-2] = BOXONDEST;
-				levelBoard[y][x-1] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				x--;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y][x-1] == BOXONDEST) && (levelBoard[y][x-2] == 	FLOOR))
-			{
-				levelBoard[y][x-2] = BOX;
-				levelBoard[y][x-1] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				x--;
-				numberOfFreeBoxes++;
-			}
-			else if(levelBoard[y][x-1] == DESTINATION)
-			{
-				levelBoard[y][x-1] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				x--;
-			}
-			else if((levelBoard[y][x-1] == BOXONDEST) && (levelBoard[y][x-2] == FLOOR))
-			{
-				levelBoard[y][x-2] = BOX;
-				levelBoard[y][x-1] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				x--;
-				numberOfFreeBoxes++;
-			}
-			break;
-			
-			//RIGHT=====================================================================
-		case 'r':
-			if(levelBoard[y][x+1] == WALL);
-			else if((levelBoard[y][x] == MAN) && (levelBoard[y][x+1] == FLOOR))
-			{
-				levelBoard[y][x+1] = MAN;
-				levelBoard[y][x] = FLOOR;
-				x++;
-			}
-			else if((levelBoard[y][x+1] == BOX) && (levelBoard[y][x+2] == FLOOR))
-			{
-				levelBoard[y][x+2] = BOX;
-				levelBoard[y][x+1] = MAN;
-				levelBoard[y][x] = FLOOR;
-				x++;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y][x+1] == FLOOR))
-			{
-				levelBoard[y][x+1] = MAN;
-				levelBoard[y][x] = DESTINATION;
-				x++;
-			}
-			else if((levelBoard[y][x+1] == BOX) && (levelBoard[y][x+2] == FLOOR))
-			{
-				levelBoard[y][x+2] = BOX;
-				levelBoard[y][x+1] = MAN;
-				levelBoard[y][x] = FLOOR;
-				x++;
-			}
-			else if((levelBoard[y][x+1] == BOX) && (levelBoard[y][x+2] == DESTINATION))
-			{
-				levelBoard[y][x+2] = BOXONDEST;
-				levelBoard[y][x+1] = MAN;
-				levelBoard[y][x] = FLOOR;
-				x++;
-				numberOfFreeBoxes--;
-			}
-			else if((levelBoard[y][x] == BOXONDEST) && (levelBoard[y][x+2] == DESTINATION))
-			{
-				levelBoard[y][x+2] = BOXONDEST;
-				levelBoard[y][x+1] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				x++;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y][x+1] == BOXONDEST) && (levelBoard[y][x+2] == DESTINATION))
-			{
-				levelBoard[y][x+2] = BOXONDEST;
-				levelBoard[y][x+1] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				x++;
-			}
-			else if((levelBoard[y][x] == MANONDEST) && (levelBoard[y][x+1] == BOXONDEST) && (levelBoard[y][x+2] == 	FLOOR))
-			{
-				levelBoard[y][x+2] = BOX;
-				levelBoard[y][x+1] = MANONDEST;
-				levelBoard[y][x] = DESTINATION;
-				x++;
-				numberOfFreeBoxes++;
-			}
-			else if(levelBoard[y][x+1] == DESTINATION)
-			{
-				levelBoard[y][x+1] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				x++;
-			}
-			else if((levelBoard[y][x+1] == BOXONDEST) && (levelBoard[y][x+2] == FLOOR))
-			{
-				levelBoard[y][x+2] = BOX;
-				levelBoard[y][x+1] = MANONDEST;
-				levelBoard[y][x] = FLOOR;
-				x++;
-				numberOfFreeBoxes++;
-			}
-			break;
+			levelBoard[y1][x1] = MAN;
+			levelBoard[y0][x0] = FLOOR;
+			positionChange(x1, y1);
+		}
+		else if((levelBoard[y0][x0] == MANONDEST) && (levelBoard[y1][x1] == DESTINATION))
+		{
+			levelBoard[y1][x1] = MANONDEST;
+			levelBoard[y0][x0] = DESTINATION;
+			positionChange(x1, y1);
+		}
+		else if((levelBoard[y0][x0] == MANONDEST) && (levelBoard[y1][x1] == FLOOR))
+		{
+			levelBoard[y1][x1] = MAN;
+			levelBoard[y0][x0] = DESTINATION;
+			positionChange(x1, y1);
+		}
+		else if((levelBoard[y1][x1] == BOX) && (levelBoard[y2][x2] == FLOOR))
+		{
+			levelBoard[y2][x2] = BOX;
+			levelBoard[y1][x1] = MAN;
+			levelBoard[y0][x0] = FLOOR;
+			positionChange(x1, y1);
+		}
+		else if((levelBoard[y1][x1] == BOX) && (levelBoard[y2][x2] == DESTINATION))
+		{
+			levelBoard[y2][x2] = BOXONDEST;
+			levelBoard[y1][x1] = MAN;
+			levelBoard[y0][x0] = FLOOR;
+			positionChange(x1, y1);
+			numberOfFreeBoxes--;
+		}
+		else if((levelBoard[y1][x1] == BOXONDEST) && (levelBoard[y2][x2] == DESTINATION))
+		{
+			levelBoard[y2][x2] = BOXONDEST;
+			levelBoard[y1][x1] = MANONDEST;
+			levelBoard[y0][x0] = FLOOR;
+			positionChange(x1, y1);
+		}
+		else if((levelBoard[y0][x0] == MANONDEST) && (levelBoard[y1][x1] == BOXONDEST) && (levelBoard[y2][x2] == DESTINATION))
+		{
+			levelBoard[y2][x2] = BOXONDEST;
+			levelBoard[y1][x1] = MANONDEST;
+			levelBoard[y][x] = DESTINATION;
+			positionChange(x1, y1);
+		}
+		else if((levelBoard[y0][x0] == MANONDEST) && (levelBoard[y1][x1] == BOXONDEST) && (levelBoard[y2][x2] == FLOOR))
+		{
+			levelBoard[y2][x2] = BOX;
+			levelBoard[y1][x1] = MANONDEST;
+			levelBoard[y0][x0] = DESTINATION;
+			positionChange(x1, y1);
+			numberOfFreeBoxes++;
+		}
+		else if(levelBoard[y1][x1] == DESTINATION)
+		{
+			levelBoard[y1][x1] = MANONDEST;
+			levelBoard[y0][x0] = FLOOR;
+			positionChange(x1, y1);
+		}
+		else if((levelBoard[y1][x1] == BOXONDEST) && (levelBoard[y2][x2] == FLOOR))
+		{
+			levelBoard[y2][x2] = BOX;
+			levelBoard[y1][x1] = MANONDEST;
+			levelBoard[y0][x0] = FLOOR;
+			positionChange(x1, y1);
+			numberOfFreeBoxes++;
 		}
 		
+	}
+	//===============================================================================
+	/** Metoda kieruj¹ca ruchem w dó³*/
+	public void moveDown()
+	{
+		move(x, x, x, y, y+1, y+2);
 		this.repaint();
 		checkAllBoxesInDest();
 	}
-	//-------------------------------------------------------------------------------------------------------
-	
+	//===============================================================================
+	/** Metoda kieruj¹ca ruchem w górê */
+	public void moveUp()
+	{
+		move(x, x, x, y, y-1, y-2);
+		this.repaint();
+		checkAllBoxesInDest();
+	}
+	//===============================================================================
+	/** Metoda kieruj¹ca ruchem w lewo*/
+	public void moveLeft()
+	{
+		move(x, x-1, x-2, y, y, y);
+		this.repaint();
+		checkAllBoxesInDest();
+	}
+	//===============================================================================
+	/** Metoda kieruj¹ca ruchem w prawo*/
+	public void moveRight()
+	{
+		move(x, x+1, x+2, y, y, y);
+		this.repaint();
+		checkAllBoxesInDest();
+	}
+	//===============================================================================
 	/** Metoda wczytuj¹ca odpowiednie obrazki do poszczególnych pól */
 	public void loadImages(ConfigReader con)
 	{
