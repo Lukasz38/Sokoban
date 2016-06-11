@@ -410,6 +410,7 @@ public class Board extends JPanel implements KeyListener
 		{
 			LevelCompletedFrame l = new LevelCompletedFrame(1);
 			add(l);
+			setVisible(false);
 		}
 	}
 
